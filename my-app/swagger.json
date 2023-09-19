@@ -1,0 +1,6393 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "PsychiatryService",
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "https://oslo-east.smud.dev.dips.no/psychiatry-service"
+    }
+  ],
+  "paths": {
+    "/api/v1/Contact/{patientId}": {
+      "get": {
+        "tags": [
+          "Contact"
+        ],
+        "summary": "Get available contacts for a patient",
+        "parameters": [
+          {
+            "name": "patientId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a json array of contacts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ContactDTO"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request, the provided id is not valid"
+          },
+          "404": {
+            "description": "The patient does not exist"
+          },
+          "401": {
+            "description": "You do not have authorization to retrieve this data"
+          }
+        }
+      }
+    },
+    "/api/v1/Contact/ListByPatientProxyId/{patientProxyId}": {
+      "get": {
+        "tags": [
+          "Contact"
+        ],
+        "summary": "Get available contacts for a patient",
+        "parameters": [
+          {
+            "name": "patientProxyId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a json array of contacts",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ContactDTO"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ContactDTO"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ContactDTO"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request, the provided id is not valid"
+          },
+          "404": {
+            "description": "The patient does not exist"
+          },
+          "401": {
+            "description": "You do not have authorization to retrieve this data"
+          }
+        }
+      }
+    },
+    "/api/v1/HealthCareParty/search": {
+      "get": {
+        "tags": [
+          "HealthCareParty"
+        ],
+        "summary": "Request requisitioners based on search term",
+        "parameters": [
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "minLength": 3,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the requisitioners related to a search term",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ResponseRequisitionerDTO"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request, the search term can not be empty"
+          },
+          "404": {
+            "description": "No requisitioners related to this search term"
+          },
+          "401": {
+            "description": "You do not have authorization to retrieve requisitioners"
+          }
+        }
+      }
+    },
+    "/api/v1/HealthCareParty/{id}": {
+      "get": {
+        "tags": [
+          "HealthCareParty"
+        ],
+        "summary": "Request requisitioners based on id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the requisitioners related to a search term",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseRequisitionerDTO"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseRequisitionerDTO"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseRequisitionerDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request, the search term can not be empty"
+          },
+          "404": {
+            "description": "No requisitioners related to this search term"
+          },
+          "401": {
+            "description": "You do not have authorization to retrieve requisitioners"
+          }
+        }
+      }
+    },
+    "/api/v1/Kodeverk": {
+      "get": {
+        "tags": [
+          "Kodeverk"
+        ],
+        "summary": "Get list of all kodeverksverdier",
+        "responses": {
+          "200": {
+            "description": "Returns a dictionary of kodeverkverdier as json",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/DIPSKodeverkVerdi"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "You do not have authorization to retrieve this data"
+          }
+        }
+      }
+    },
+    "/api/v1/PatientInformation": {
+      "get": {
+        "tags": [
+          "PatientInformation"
+        ],
+        "summary": "Get patients that matches a search term, either last name or national identity number",
+        "parameters": [
+          {
+            "name": "QueryString",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "minLength": 3,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a json array of patients",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PatientInformation"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request, the provided search term is not valid"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "401": {
+            "description": "You do not have authorization to retrieve this data"
+          }
+        }
+      }
+    },
+    "/api/v1/PatientInformation/PatientProxyId/{patientId}": {
+      "get": {
+        "tags": [
+          "PatientInformation"
+        ],
+        "parameters": [
+          {
+            "name": "patientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/{patientId}/rettsliggrunnlag": {
+      "post": {
+        "tags": [
+          "RettsligGrunnlag"
+        ],
+        "summary": "Create new rettsliggrunnlag",
+        "parameters": [
+          {
+            "name": "patientId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_10_2"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_10_3"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_10_4"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_2_1"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_2_2"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_3_2"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_3_3"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_3_5"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_4_1"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_AnnetRettsligGrunnlag"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_AvsluttAnnetRettsligGrunnlag"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_AvsluttDomPaaOverforingTilTPH"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_AvsluttDomPaaTvungenOmsorg"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_AvsluttTilbakeholdelse24Timer"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_10_2"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_10_3"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_10_4"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_2_1"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_2_2"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_3_5"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_3_7_TO"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_3_7_TPH"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_4_1"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_DomPaaOverforingTilTPH"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_DomPaaTvungenOmsorg"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_KontrollUndersokelse"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_OpprettetVedAnnenInstitusjon"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Overfoert_fra_annet_foretak"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_OverforingAvDomfeltMellomTvangsformer"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_OverforingAvDomfeltTilAnnenInstitusjon"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_OverforingAv_3_2_TilAnnenInstitusjon"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_OverforingMellomTvangsformer"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_OverforingTilAnnenInstitusjon"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_SamtykkeForlengelseTO"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_SamtykkeForlengelseTPH"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Tilbakeholdelse24Timer"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_ToTphIkkeEtableres"
+                  }
+                ]
+              }
+            },
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_10_2"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_10_3"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_10_4"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_2_1"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_2_2"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_3_2"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_3_3"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_3_5"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_4_1"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_AnnetRettsligGrunnlag"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_AvsluttAnnetRettsligGrunnlag"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_AvsluttDomPaaOverforingTilTPH"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_AvsluttDomPaaTvungenOmsorg"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_AvsluttTilbakeholdelse24Timer"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_10_2"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_10_3"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_10_4"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_2_1"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_2_2"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_3_5"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_3_7_TO"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_3_7_TPH"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_4_1"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_DomPaaOverforingTilTPH"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_DomPaaTvungenOmsorg"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_KontrollUndersokelse"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_OpprettetVedAnnenInstitusjon"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Overfoert_fra_annet_foretak"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_OverforingAvDomfeltMellomTvangsformer"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_OverforingAvDomfeltTilAnnenInstitusjon"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_OverforingAv_3_2_TilAnnenInstitusjon"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_OverforingMellomTvangsformer"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_OverforingTilAnnenInstitusjon"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_SamtykkeForlengelseTO"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_SamtykkeForlengelseTPH"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Tilbakeholdelse24Timer"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_ToTphIkkeEtableres"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_10_2"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_10_3"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_10_4"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_2_1"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_2_2"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_3_2"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_3_3"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_3_5"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_4_1"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_AnnetRettsligGrunnlag"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_AvsluttAnnetRettsligGrunnlag"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_AvsluttDomPaaOverforingTilTPH"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_AvsluttDomPaaTvungenOmsorg"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_AvsluttTilbakeholdelse24Timer"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_10_2"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_10_3"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_10_4"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_2_1"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_2_2"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_3_5"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_3_7_TO"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_3_7_TPH"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_4_1"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_DomPaaOverforingTilTPH"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_DomPaaTvungenOmsorg"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_KontrollUndersokelse"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_OpprettetVedAnnenInstitusjon"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Overfoert_fra_annet_foretak"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_OverforingAvDomfeltMellomTvangsformer"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_OverforingAvDomfeltTilAnnenInstitusjon"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_OverforingAv_3_2_TilAnnenInstitusjon"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_OverforingMellomTvangsformer"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_OverforingTilAnnenInstitusjon"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_SamtykkeForlengelseTO"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_SamtykkeForlengelseTPH"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Tilbakeholdelse24Timer"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_ToTphIkkeEtableres"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_10_2"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_10_3"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_10_4"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_2_1"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_2_2"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_3_2"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_3_3"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_3_5"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_4_1"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_AnnetRettsligGrunnlag"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_AvsluttAnnetRettsligGrunnlag"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_AvsluttDomPaaOverforingTilTPH"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_AvsluttDomPaaTvungenOmsorg"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_AvsluttTilbakeholdelse24Timer"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_10_2"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_10_3"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_10_4"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_2_1"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_2_2"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_3_5"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_3_7_TO"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_3_7_TPH"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_4_1"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_DomPaaOverforingTilTPH"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_DomPaaTvungenOmsorg"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_KontrollUndersokelse"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_OpprettetVedAnnenInstitusjon"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Overfoert_fra_annet_foretak"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_OverforingAvDomfeltMellomTvangsformer"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_OverforingAvDomfeltTilAnnenInstitusjon"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_OverforingAv_3_2_TilAnnenInstitusjon"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_OverforingMellomTvangsformer"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_OverforingTilAnnenInstitusjon"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_SamtykkeForlengelseTO"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_SamtykkeForlengelseTPH"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_Tilbakeholdelse24Timer"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RettsligGrunnlag_ToTphIkkeEtableres"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "201": {
+            "description": "Returns a location header"
+          },
+          "400": {
+            "description": "Bad request, the provided rettslig grunnlag is not correct"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "RettsligGrunnlag"
+        ],
+        "summary": "Get rettslig grunnlag list",
+        "parameters": [
+          {
+            "name": "patientId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "ContactId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a list of rettslig grunnlag",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IRettsligGrunnlag"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IRettsligGrunnlag"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IRettsligGrunnlag"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request patientid is not correct"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/{patientId}/rettsliggrunnlag/{id}": {
+      "get": {
+        "tags": [
+          "RettsligGrunnlag"
+        ],
+        "summary": "Get rettslig grunnlag by Id",
+        "parameters": [
+          {
+            "name": "patientId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a rettslig grunnlag",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_10_2"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_10_3"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_10_4"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_2_1"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_2_2"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_3_2"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_3_3"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_3_5"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_4_1"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_AnnetRettsligGrunnlag"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_AvsluttAnnetRettsligGrunnlag"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_AvsluttDomPaaOverforingTilTPH"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_AvsluttDomPaaTvungenOmsorg"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_AvsluttTilbakeholdelse24Timer"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_10_2"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_10_3"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_10_4"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_2_1"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_2_2"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_3_5"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_3_7_TO"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_3_7_TPH"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_4_1"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_DomPaaOverforingTilTPH"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_DomPaaTvungenOmsorg"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_KontrollUndersokelse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_OpprettetVedAnnenInstitusjon"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_Overfoert_fra_annet_foretak"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_OverforingAvDomfeltMellomTvangsformer"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_OverforingAvDomfeltTilAnnenInstitusjon"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_OverforingAv_3_2_TilAnnenInstitusjon"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_OverforingMellomTvangsformer"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_OverforingTilAnnenInstitusjon"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_SamtykkeForlengelseTO"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_SamtykkeForlengelseTPH"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_Tilbakeholdelse24Timer"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_ToTphIkkeEtableres"
+                    }
+                  ]
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_10_2"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_10_3"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_10_4"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_2_1"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_2_2"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_3_2"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_3_3"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_3_5"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_4_1"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_AnnetRettsligGrunnlag"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_AvsluttAnnetRettsligGrunnlag"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_AvsluttDomPaaOverforingTilTPH"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_AvsluttDomPaaTvungenOmsorg"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_AvsluttTilbakeholdelse24Timer"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_10_2"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_10_3"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_10_4"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_2_1"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_2_2"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_3_5"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_3_7_TO"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_3_7_TPH"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_4_1"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_DomPaaOverforingTilTPH"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_DomPaaTvungenOmsorg"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_KontrollUndersokelse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_OpprettetVedAnnenInstitusjon"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_Overfoert_fra_annet_foretak"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_OverforingAvDomfeltMellomTvangsformer"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_OverforingAvDomfeltTilAnnenInstitusjon"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_OverforingAv_3_2_TilAnnenInstitusjon"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_OverforingMellomTvangsformer"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_OverforingTilAnnenInstitusjon"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_SamtykkeForlengelseTO"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_SamtykkeForlengelseTPH"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_Tilbakeholdelse24Timer"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_ToTphIkkeEtableres"
+                    }
+                  ]
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_10_2"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_10_3"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_10_4"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_2_1"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_2_2"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_3_2"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_3_3"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_3_5"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_4_1"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_AnnetRettsligGrunnlag"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_AvsluttAnnetRettsligGrunnlag"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_AvsluttDomPaaOverforingTilTPH"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_AvsluttDomPaaTvungenOmsorg"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_AvsluttTilbakeholdelse24Timer"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_10_2"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_10_3"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_10_4"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_2_1"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_2_2"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_3_5"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_3_7_TO"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_3_7_TPH"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_Avslutt_4_1"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_DomPaaOverforingTilTPH"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_DomPaaTvungenOmsorg"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_KontrollUndersokelse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_OpprettetVedAnnenInstitusjon"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_Overfoert_fra_annet_foretak"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_OverforingAvDomfeltMellomTvangsformer"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_OverforingAvDomfeltTilAnnenInstitusjon"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_OverforingAv_3_2_TilAnnenInstitusjon"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_OverforingMellomTvangsformer"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_OverforingTilAnnenInstitusjon"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_SamtykkeForlengelseTO"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_SamtykkeForlengelseTPH"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_Tilbakeholdelse24Timer"
+                    },
+                    {
+                      "$ref": "#/components/schemas/RettsligGrunnlag_ToTphIkkeEtableres"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request, the provided id or patientid is not correct"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "RettsligGrunnlag"
+        ],
+        "summary": "Update rettslig grunnlag",
+        "parameters": [
+          {
+            "name": "patientId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/Operation"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Operation`1"
+                    }
+                  ]
+                }
+              }
+            },
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/Operation"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Operation`1"
+                    }
+                  ]
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/Operation"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Operation`1"
+                    }
+                  ]
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/Operation"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Operation`1"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns a patch log",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatchLog"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatchLog"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatchLog"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request patientid is not correct"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "options": {
+        "tags": [
+          "RettsligGrunnlag"
+        ],
+        "parameters": [
+          {
+            "name": "patientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/v1/{patientId}/tvangsprotokoll": {
+      "get": {
+        "tags": [
+          "Tvangsprotokoll"
+        ],
+        "summary": "Get a list of tvangsprotokoll elements by vedtak id",
+        "parameters": [
+          {
+            "name": "patientId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "VedtakId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Take",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a json array of tvangsprotokoll elements",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/Gjennomforing_4_3"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Gjennomforing_4_4"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Gjennomforing_4_8"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request, the provided input is not valid"
+          },
+          "401": {
+            "description": "You do not have authorization to retrieve this data"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Tvangsprotokoll"
+        ],
+        "summary": "Create new tvangsprotokoll",
+        "parameters": [
+          {
+            "name": "patientId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/Gjennomforing_4_3"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Gjennomforing_4_4"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Gjennomforing_4_8"
+                  }
+                ]
+              }
+            },
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/Gjennomforing_4_3"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Gjennomforing_4_4"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Gjennomforing_4_8"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/Gjennomforing_4_3"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Gjennomforing_4_4"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Gjennomforing_4_8"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/Gjennomforing_4_3"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Gjennomforing_4_4"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Gjennomforing_4_8"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "201": {
+            "description": "Returns a location header"
+          },
+          "400": {
+            "description": "Bad request, the provided tvangsprotokoll is not correct"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/{patientId}/tvangsprotokoll/{id}": {
+      "get": {
+        "tags": [
+          "Tvangsprotokoll"
+        ],
+        "summary": "Get a tvangsprotokoll by id",
+        "parameters": [
+          {
+            "name": "patientId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a a tvangsprotokoll json item",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/Gjennomforing_4_3"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Gjennomforing_4_4"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Gjennomforing_4_8"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request, the provided input is not valid"
+          },
+          "401": {
+            "description": "You do not have authorization to retrieve this data"
+          }
+        }
+      }
+    },
+    "/api/v1/usersettings": {
+      "put": {
+        "tags": [
+          "UserSettings"
+        ],
+        "summary": "Update User Filters",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserSettings"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserSettings"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserSettings"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserSettings"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "201": {
+            "description": "Returns a location header"
+          },
+          "400": {
+            "description": "Bad request, the provided input is not valid"
+          },
+          "401": {
+            "description": "You do not have authorization to retrieve this data"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "UserSettings"
+        ],
+        "summary": "Get User Filters",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserSettings"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserSettings"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserSettings"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Returns a location header"
+          },
+          "400": {
+            "description": "Bad request, the provided input is not valid"
+          },
+          "401": {
+            "description": "You do not have authorization to retrieve this data"
+          }
+        }
+      }
+    },
+    "/api/v1/{patientId}/vedtak": {
+      "post": {
+        "tags": [
+          "Vedtak"
+        ],
+        "summary": "Create Vedtak",
+        "parameters": [
+          {
+            "name": "patientId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4A"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_3"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_4"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_5_Innskrenket"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_5_Post"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_6"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_7"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_7a"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_8"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_8a"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_8b"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_8c"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_8d"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_8_Hastevedtak_fagligAnsvarlig"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_Avslutt_4a_6"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_Avslutt_4a_Nattelaasing"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_Avslutt_4_4"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_Avslutt_4_3"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_Avslutt_4_5_Innskrenket"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_Avslutt_4_5_Post"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_Avslutt_6"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_Avslutt_7"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_ECT"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_Holding"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_Rus"
+                  }
+                ]
+              }
+            },
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4A"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_3"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_4"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_5_Innskrenket"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_5_Post"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_6"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_7"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_7a"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_8"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_8a"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_8b"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_8c"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_8d"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_8_Hastevedtak_fagligAnsvarlig"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_Avslutt_4a_6"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_Avslutt_4a_Nattelaasing"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_Avslutt_4_4"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_Avslutt_4_3"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_Avslutt_4_5_Innskrenket"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_Avslutt_4_5_Post"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_Avslutt_6"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_Avslutt_7"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_ECT"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_Holding"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_Rus"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4A"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_3"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_4"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_5_Innskrenket"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_5_Post"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_6"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_7"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_7a"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_8"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_8a"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_8b"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_8c"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_8d"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_8_Hastevedtak_fagligAnsvarlig"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_Avslutt_4a_6"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_Avslutt_4a_Nattelaasing"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_Avslutt_4_4"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_Avslutt_4_3"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_Avslutt_4_5_Innskrenket"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_Avslutt_4_5_Post"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_Avslutt_6"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_Avslutt_7"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_ECT"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_Holding"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_Rus"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4A"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_3"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_4"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_5_Innskrenket"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_5_Post"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_6"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_7"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_7a"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_8"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_8a"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_8b"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_8c"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_8d"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_4_8_Hastevedtak_fagligAnsvarlig"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_Avslutt_4a_6"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_Avslutt_4a_Nattelaasing"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_Avslutt_4_4"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_Avslutt_4_3"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_Avslutt_4_5_Innskrenket"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_Avslutt_4_5_Post"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_Avslutt_6"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_Avslutt_7"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_ECT"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_Holding"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Vedtak_Rus"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "201": {
+            "description": "Returns a location header for the created vedtak"
+          },
+          "400": {
+            "description": "Bad request, the provided input is not valid"
+          },
+          "401": {
+            "description": "You do not have authorization to retrieve this data"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Vedtak"
+        ],
+        "summary": "Get list of vedtak",
+        "parameters": [
+          {
+            "name": "patientId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "RettsligGrunnlagId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a list of vedtak as json",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4A"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4_3"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4_4"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4_5_Innskrenket"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4_5_Post"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4_6"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4_7"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4_7a"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4_8"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4_8a"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4_8b"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4_8c"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4_8d"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4_8_Hastevedtak_fagligAnsvarlig"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_Avslutt_4a_6"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_Avslutt_4a_Nattelaasing"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_Avslutt_4_4"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_Avslutt_4_3"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_Avslutt_4_5_Innskrenket"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_Avslutt_4_5_Post"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_Avslutt_6"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_Avslutt_7"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_ECT"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_Holding"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_Rus"
+                      }
+                    ]
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4A"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4_3"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4_4"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4_5_Innskrenket"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4_5_Post"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4_6"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4_7"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4_7a"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4_8"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4_8a"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4_8b"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4_8c"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4_8d"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4_8_Hastevedtak_fagligAnsvarlig"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_Avslutt_4a_6"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_Avslutt_4a_Nattelaasing"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_Avslutt_4_4"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_Avslutt_4_3"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_Avslutt_4_5_Innskrenket"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_Avslutt_4_5_Post"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_Avslutt_6"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_Avslutt_7"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_ECT"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_Holding"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_Rus"
+                      }
+                    ]
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4A"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4_3"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4_4"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4_5_Innskrenket"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4_5_Post"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4_6"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4_7"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4_7a"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4_8"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4_8a"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4_8b"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4_8c"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4_8d"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_4_8_Hastevedtak_fagligAnsvarlig"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_Avslutt_4a_6"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_Avslutt_4a_Nattelaasing"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_Avslutt_4_4"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_Avslutt_4_3"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_Avslutt_4_5_Innskrenket"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_Avslutt_4_5_Post"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_Avslutt_6"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_Avslutt_7"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_ECT"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_Holding"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Vedtak_Rus"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request, the provided input is not valid"
+          },
+          "401": {
+            "description": "You do not have authorization to retrieve this data"
+          }
+        }
+      }
+    },
+    "/api/v1/{patientId}/vedtak/{id}": {
+      "get": {
+        "tags": [
+          "Vedtak"
+        ],
+        "summary": "Get vedtak by id",
+        "parameters": [
+          {
+            "name": "patientId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a vedtak object as json",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4A"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4_3"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4_4"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4_5_Innskrenket"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4_5_Post"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4_6"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4_7"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4_7a"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4_8"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4_8a"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4_8b"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4_8c"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4_8d"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4_8_Hastevedtak_fagligAnsvarlig"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_Avslutt_4a_6"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_Avslutt_4a_Nattelaasing"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_Avslutt_4_4"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_Avslutt_4_3"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_Avslutt_4_5_Innskrenket"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_Avslutt_4_5_Post"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_Avslutt_6"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_Avslutt_7"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_ECT"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_Holding"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_Rus"
+                    }
+                  ]
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4A"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4_3"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4_4"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4_5_Innskrenket"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4_5_Post"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4_6"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4_7"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4_7a"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4_8"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4_8a"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4_8b"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4_8c"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4_8d"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4_8_Hastevedtak_fagligAnsvarlig"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_Avslutt_4a_6"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_Avslutt_4a_Nattelaasing"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_Avslutt_4_4"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_Avslutt_4_3"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_Avslutt_4_5_Innskrenket"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_Avslutt_4_5_Post"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_Avslutt_6"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_Avslutt_7"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_ECT"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_Holding"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_Rus"
+                    }
+                  ]
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4A"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4_3"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4_4"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4_5_Innskrenket"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4_5_Post"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4_6"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4_7"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4_7a"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4_8"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4_8a"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4_8b"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4_8c"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4_8d"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_4_8_Hastevedtak_fagligAnsvarlig"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_Avslutt_4a_6"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_Avslutt_4a_Nattelaasing"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_Avslutt_4_4"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_Avslutt_4_3"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_Avslutt_4_5_Innskrenket"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_Avslutt_4_5_Post"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_Avslutt_6"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_Avslutt_7"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_ECT"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_Holding"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Vedtak_Rus"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request, the provided input is not valid"
+          },
+          "401": {
+            "description": "You do not have authorization to retrieve this data"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Vedtak"
+        ],
+        "summary": "Update vedtak",
+        "parameters": [
+          {
+            "name": "patientId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/Operation"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Operation`1"
+                    }
+                  ]
+                }
+              }
+            },
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/Operation"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Operation`1"
+                    }
+                  ]
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/Operation"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Operation`1"
+                    }
+                  ]
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/Operation"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Operation`1"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns a patch log",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatchLog"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatchLog"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PatchLog"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request patientid is not correct"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Address": {
+        "type": "object",
+        "properties": {
+          "town": {
+            "type": "string",
+            "nullable": true
+          },
+          "zipCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "streetAddress": {
+            "type": "string",
+            "nullable": true
+          },
+          "zipCodeId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Ansvarlig": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "vedtaksId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "stilling": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue8441"
+          },
+          "hastevedtakStilling": {
+            "type": "string",
+            "nullable": true
+          },
+          "dipsRekvirentId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "stillingFriT": {
+            "type": "string",
+            "nullable": true
+          },
+          "ansvarligFriT": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ContactDTO": {
+        "type": "object",
+        "properties": {
+          "patientId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "contactId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "episodeOfCareId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "isScheduledContact": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "tentativity": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "checkinTime": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "endTime": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "scheduledContactTypeId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "contactType": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "reason": {
+            "type": "string",
+            "nullable": true
+          },
+          "levelOfCare": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "scheduledContactName": {
+            "type": "string",
+            "nullable": true
+          },
+          "coordinationComment": {
+            "type": "string",
+            "nullable": true
+          },
+          "periodOfCareId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "periodOfCareStartDateTime": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "periodOfCareClinicalProblem": {
+            "type": "string",
+            "nullable": true
+          },
+          "noShow": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "departmentId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "departmentName": {
+            "type": "string",
+            "nullable": true
+          },
+          "departmentShortName": {
+            "type": "string",
+            "nullable": true
+          },
+          "departmentTypeId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "locationId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "locationName": {
+            "type": "string",
+            "nullable": true
+          },
+          "locationShortName": {
+            "type": "string",
+            "nullable": true
+          },
+          "wardId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "wardName": {
+            "type": "string",
+            "nullable": true
+          },
+          "wardShortName": {
+            "type": "string",
+            "nullable": true
+          },
+          "sectionId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "sectionName": {
+            "type": "string",
+            "nullable": true
+          },
+          "sectionShortName": {
+            "type": "string",
+            "nullable": true
+          },
+          "referralIsPrimary": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "externalInfoRestricted": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "responsibleDoctor": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DIPSKodeverkVerdi": {
+        "type": "object",
+        "properties": {
+          "kodeId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "kodeListeId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "volvenKode": {
+            "type": "string",
+            "nullable": true
+          },
+          "volvenKortNavn": {
+            "type": "string",
+            "nullable": true
+          },
+          "volvenLangtNavn": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Gjennomforing_4_3": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Tvangsprotokoll"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "Gjennomforing_4_4": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Tvangsprotokoll"
+          }
+        ],
+        "properties": {
+          "administrertLegemiddel": {
+            "type": "string",
+            "nullable": true
+          },
+          "administrertDose": {
+            "type": "string",
+            "nullable": true
+          },
+          "administrasjonsform": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Gjennomforing_4_8": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Tvangsprotokoll"
+          }
+        ],
+        "properties": {
+          "endringUnderGjForing": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9272"
+          },
+          "beskrivelseAvGjForing": {
+            "type": "string",
+            "nullable": true
+          },
+          "endretTidspunkt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "IRettsligGrunnlag": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "opprettetDato": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "helsevernDelperiodeId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "readOnly": true
+          },
+          "visitId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true,
+            "readOnly": true
+          },
+          "helsetjenesteenhet": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "medEllerUtenDognOpphold": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9312"
+          },
+          "feilregistrert": {
+            "type": "boolean",
+            "nullable": true,
+            "readOnly": true
+          },
+          "hjemmel": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9300"
+          },
+          "etablertDato": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "readOnly": true
+          },
+          "gyldigTil": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "readOnly": true
+          },
+          "statusRettsligGrunnlag": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9298"
+          },
+          "pasientId": {
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "vedtakType": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9275"
+          },
+          "ansvarlig": {
+            "$ref": "#/components/schemas/Ansvarlig"
+          },
+          "informasjonTilParorende": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9257"
+          },
+          "pasientHarUttaltOgMener": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "version": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true,
+            "readOnly": true
+          },
+          "patchLogId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Operation": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationBase"
+          }
+        ],
+        "properties": {
+          "value": {
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OperationBase": {
+        "type": "object",
+        "properties": {
+          "operationType": {
+            "$ref": "#/components/schemas/OperationType"
+          },
+          "path": {
+            "type": "string",
+            "nullable": true
+          },
+          "op": {
+            "type": "string",
+            "nullable": true
+          },
+          "from": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OperationType": {
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "Operation`1": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Operation"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "PatchLog": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "jsonPatch": {
+            "type": "string",
+            "nullable": true
+          },
+          "version": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "changedBy": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "changedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PatientInformation": {
+        "type": "object",
+        "properties": {
+          "nationalityId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "firstname": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "nationalIdentityNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "gender": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "nationalIdentityNumberType": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "address": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "isDead": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "isPatient": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "isHistorical": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "personId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "municipalityId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ResponseRequisitionerDTO": {
+        "type": "object",
+        "properties": {
+          "healthCareProfessionalId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "canFinallyApprove": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "hospitalId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "departmentName": {
+            "type": "string",
+            "nullable": true
+          },
+          "departmentShortName": {
+            "type": "string",
+            "nullable": true
+          },
+          "role": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RettsligGrunnlag": {
+        "required": [
+          "hjemmel",
+          "pasientId",
+          "visitId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "opprettetDato": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "helsevernDelperiodeId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "visitId": {
+            "maximum": 2147483647,
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
+          },
+          "medEllerUtenDognOpphold": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9312"
+          },
+          "gyldigTil": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "pasientId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "pasientHarUttaltOgMener": {
+            "type": "string",
+            "nullable": true
+          },
+          "informasjonTilParorende": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9257"
+          },
+          "helsetjenesteenhet": {
+            "type": "string",
+            "nullable": true
+          },
+          "ansvarlig": {
+            "$ref": "#/components/schemas/Ansvarlig"
+          },
+          "vedtakFattetDato": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "feilregistrert": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "hjemmel": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9300"
+          },
+          "etablertDato": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "statusRettsligGrunnlag": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9298"
+          },
+          "merknad": {
+            "type": "string",
+            "nullable": true
+          },
+          "vedtakType": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9275"
+          },
+          "version": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "patchLogId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "isDraft": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RettsligGrunnlag_10_2": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RettsligGrunnlag"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "RettsligGrunnlag_10_3": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RettsligGrunnlag"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "RettsligGrunnlag_10_4": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RettsligGrunnlag"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "RettsligGrunnlag_2_1": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RettsligGrunnlag"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "RettsligGrunnlag_2_2": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RettsligGrunnlag"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "RettsligGrunnlag_3_2": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RettsligGrunnlag"
+          }
+        ],
+        "properties": {
+          "pasAnkomTilInstitusjon": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "hjemmelTO": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9276"
+          },
+          "unntakFraKonvForbudet": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "begrUnntakKonvForbudet": {
+            "type": "string",
+            "nullable": true
+          },
+          "omNearmPaarorUttalelser": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9311"
+          },
+          "nearmPaarorenUttalelser": {
+            "type": "string",
+            "nullable": true
+          },
+          "detErFremsattBegjearing": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "begjearingMottattDato": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "begjearingFremsattAv": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9290"
+          },
+          "fremBegjearAnlUttaleSeg": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "uttalelseBegjearInstans": {
+            "type": "string",
+            "nullable": true
+          },
+          "vurderingAvFrivillighet": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VolvenKodeverkValue9279"
+            },
+            "nullable": true
+          },
+          "friviElFormaalslostBegr": {
+            "type": "string",
+            "nullable": true
+          },
+          "eksternLegeUndDato": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "eksternLegeUndUtfortAv": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "ekstLegeUndUtfortAvFriT": {
+            "type": "string",
+            "nullable": true
+          },
+          "eksternLegeUndPgaVedtak": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "internLegeundersokelseDato": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "internLegeUndUtfortAv": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "vurdAlvSinnlidErOppfylt": {
+            "type": "string",
+            "nullable": true
+          },
+          "vilkaarSomVurdOppfylt": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VolvenKodeverkValue9280"
+            },
+            "nullable": true
+          },
+          "tilleggsVilkaarBegrunn": {
+            "type": "string",
+            "nullable": true
+          },
+          "vurdPasSamKompetanse": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9313"
+          },
+          "samtykkeKompetanseBegr": {
+            "type": "string",
+            "nullable": true
+          },
+          "instFagMatrEgnetForPas": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "begrTOSomBesLosnForPas": {
+            "type": "string",
+            "nullable": true
+          },
+          "fremBegjErInfoKlageadg": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RettsligGrunnlag_3_3": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RettsligGrunnlag"
+          }
+        ],
+        "properties": {
+          "nesteKontrollundersokelse": {
+            "type": "string",
+            "nullable": true
+          },
+          "fristNesteKontrollundersokelse": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "pasAnkomTilInstitusjon": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "oppstartsDatoTO": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "hjemmelTPH": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9277"
+          },
+          "unntakFraKonvForbudet": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "begrUnntakKonvForbudet": {
+            "type": "string",
+            "nullable": true
+          },
+          "omNearmPaarorUttalelser": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9311"
+          },
+          "nearmPaarorenUttalelser": {
+            "type": "string",
+            "nullable": true
+          },
+          "detErFremsattBegjearing": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "begjearingMottattDato": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "begjearingFremsattAv": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9290"
+          },
+          "fremBegjearAnlUttaleSeg": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "uttalelseBegjearInstans": {
+            "type": "string",
+            "nullable": true
+          },
+          "vurderingAvFrivillighet": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VolvenKodeverkValue9279"
+            },
+            "nullable": true
+          },
+          "friviElFormaalslostBegr": {
+            "type": "string",
+            "nullable": true
+          },
+          "eksternLegeUndDato": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "eksternLegeUndUtfortAv": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "ekstLegeUndUtfortAvFriT": {
+            "type": "string",
+            "nullable": true
+          },
+          "eksternLegeUndPgaVedtak": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "internLegeUndDato": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "internLegeUndUtfortAv": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "vurdAlvSinnlidErOppfylt": {
+            "type": "string",
+            "nullable": true
+          },
+          "vilkaarSomVurdOppfylt": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VolvenKodeverkValue9280"
+            },
+            "nullable": true
+          },
+          "tilleggsVilkaarBegrunn": {
+            "type": "string",
+            "nullable": true
+          },
+          "vurdPasSamKompetanse": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9313"
+          },
+          "samtykkeKompetanseBegr": {
+            "type": "string",
+            "nullable": true
+          },
+          "instFagMatrEgnetForPas": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "begrTPHSomBesLosnForPas": {
+            "type": "string",
+            "nullable": true
+          },
+          "fremBegjErInfoKlageadg": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RettsligGrunnlag_3_5": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RettsligGrunnlag"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "RettsligGrunnlag_4_1": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RettsligGrunnlag"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "RettsligGrunnlag_AnnetRettsligGrunnlag": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RettsligGrunnlag"
+          }
+        ],
+        "properties": {
+          "annenLovhjemmel": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RettsligGrunnlag_AvsluttAnnetRettsligGrunnlag": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RettsligGrunnlag"
+          }
+        ],
+        "properties": {
+          "annenLovhjemmel": {
+            "type": "string",
+            "nullable": true
+          },
+          "vilkaarUtsettelseStraff": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9291"
+          },
+          "godskrivGjennomfoStraff": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9308"
+          },
+          "tidspktOpphorAvAnnetRG": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RettsligGrunnlag_AvsluttDomPaaOverforingTilTPH": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RettsligGrunnlag"
+          }
+        ],
+        "properties": {
+          "vilkaarUtsettelseStraff": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9291"
+          },
+          "godskrivGjennomfoStraff": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9308"
+          },
+          "tidspunktOpphorAvDomTPH": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RettsligGrunnlag_AvsluttDomPaaTvungenOmsorg": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RettsligGrunnlag"
+          }
+        ],
+        "properties": {
+          "vilkaarUtsettelseStraff": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9291"
+          },
+          "godskrivGjennomfoStraff": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9308"
+          },
+          "tidspunktOpphorAvDomTO": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RettsligGrunnlag_AvsluttTilbakeholdelse24Timer": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RettsligGrunnlag"
+          }
+        ],
+        "properties": {
+          "tidspktForOpphorAvTbh24": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RettsligGrunnlag_Avslutt_10_2": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RettsligGrunnlag"
+          }
+        ],
+        "properties": {
+          "tidspktOpphorAv_10_2": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RettsligGrunnlag_Avslutt_10_3": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RettsligGrunnlag"
+          }
+        ],
+        "properties": {
+          "tidspktOpphorAv_10_3": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RettsligGrunnlag_Avslutt_10_4": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RettsligGrunnlag"
+          }
+        ],
+        "properties": {
+          "tidspktOpphorAv_10_4": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RettsligGrunnlag_Avslutt_2_1": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RettsligGrunnlag"
+          }
+        ],
+        "properties": {
+          "vilkaarUtsettelseStraff": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9291"
+          },
+          "godskrivGjennomfoStraff": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9308"
+          },
+          "tidspktOpphorAv_2_1": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RettsligGrunnlag_Avslutt_2_2": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RettsligGrunnlag"
+          }
+        ],
+        "properties": {
+          "vilkaarUtsettelseStraff": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9291"
+          },
+          "godskrivGjennomfoStraff": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9308"
+          },
+          "tidspktOpphorAv_2_2": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RettsligGrunnlag_Avslutt_3_5": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RettsligGrunnlag"
+          }
+        ],
+        "properties": {
+          "vilkaarUtsettelseStraff": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9291"
+          },
+          "godskrivGjennomfoStraff": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9308"
+          },
+          "tidspktOpphorAv_3_5": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RettsligGrunnlag_Avslutt_3_7_TO": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RettsligGrunnlag"
+          }
+        ],
+        "properties": {
+          "toOpprinneligVedtatt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "omNearmPaarorUttalelser": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9311"
+          },
+          "nearmPaarorenUttalelser": {
+            "type": "string",
+            "nullable": true
+          },
+          "detErFremsattBegjearing": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "fremBegjearAnlUttaleSeg": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "uttalelseBegjearInstans": {
+            "type": "string",
+            "nullable": true
+          },
+          "bgrVilkaarTOIkkeOppfylt": {
+            "type": "string",
+            "nullable": true
+          },
+          "fremBegjErInfoKlageadg": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "paaklagUtsattIverksett": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "vilkaarUtsettelseStraff": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9291"
+          },
+          "godskrivGjennomfoStraff": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9308"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RettsligGrunnlag_Avslutt_3_7_TPH": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RettsligGrunnlag"
+          }
+        ],
+        "properties": {
+          "underTphSiden": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "omNearmPaarorUttalelser": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9311"
+          },
+          "nearmPaarorenUttalelser": {
+            "type": "string",
+            "nullable": true
+          },
+          "detErFremsattBegjearing": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "fremBegjearAnlUttaleSeg": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "uttalelseBegjearInstans": {
+            "type": "string",
+            "nullable": true
+          },
+          "bgrVilkaarTPHIkkeOppfylt": {
+            "type": "string",
+            "nullable": true
+          },
+          "fremBegjErInfoKlageadg": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "paaklagUtsattIverksett": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "vilkaarUtsettelseStraff": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9291"
+          },
+          "godskrivGjennomfoStraff": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9308"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RettsligGrunnlag_Avslutt_4_1": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RettsligGrunnlag"
+          }
+        ],
+        "properties": {
+          "tidspktOpphorAv_4_1": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RettsligGrunnlag_DomPaaOverforingTilTPH": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RettsligGrunnlag"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "RettsligGrunnlag_DomPaaTvungenOmsorg": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RettsligGrunnlag"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "RettsligGrunnlag_KontrollUndersokelse": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RettsligGrunnlag"
+          }
+        ],
+        "properties": {
+          "undersokelseUtfort": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "kritTPHFortsattTilstede": {
+            "type": "string",
+            "nullable": true
+          },
+          "fagAnsPersUndPasienten": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "startTidspunktTPH": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "vurderingAvTPH": {
+            "type": "string",
+            "nullable": true
+          },
+          "kontrollundersokelse": {
+            "type": "string",
+            "nullable": true
+          },
+          "nesteKontrollundersokelse": {
+            "type": "string",
+            "nullable": true
+          },
+          "fristNesteKontrollundersokelse": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RettsligGrunnlag_OpprettetVedAnnenInstitusjon": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RettsligGrunnlag"
+          }
+        ],
+        "properties": {
+          "fagligAnsvarligKontaktinformasjon": {
+            "type": "string",
+            "nullable": true
+          },
+          "ankommetTidspunkt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "overfortFraEnhet": {
+            "type": "string",
+            "nullable": true
+          },
+          "nesteKontrollundersokelse": {
+            "type": "string",
+            "nullable": true
+          },
+          "fristNesteKontrollundersokelse": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RettsligGrunnlag_Overfoert_fra_annet_foretak": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RettsligGrunnlag"
+          }
+        ],
+        "properties": {
+          "ankommetTidspunkt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "overfortFraEnhet": {
+            "type": "string",
+            "nullable": true
+          },
+          "annenLovhjemmel": {
+            "type": "string",
+            "nullable": true
+          },
+          "pasPaaOpphldIkkeGdkjTPH": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "pasTilbInstIkkeGdkjTPH": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "vilkaarUtsettelseStraff": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9291"
+          },
+          "godskrivGjennomfoStraff": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9308"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RettsligGrunnlag_OverforingAvDomfeltMellomTvangsformer": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RettsligGrunnlag"
+          }
+        ],
+        "properties": {
+          "sisteDomPaaOverforinTPH": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "eksisterendeHjemmel": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9300"
+          },
+          "nyHjemmel": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9277"
+          },
+          "eksisterendeDognStatus": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9312"
+          },
+          "dognStatus": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9312"
+          },
+          "endringAvTvangsform": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9299"
+          },
+          "overforesTilEnhet": {
+            "type": "string",
+            "nullable": true
+          },
+          "begrunnelse": {
+            "type": "string",
+            "nullable": true
+          },
+          "medDognTUtenDognBegrunn": {
+            "type": "string",
+            "nullable": true
+          },
+          "hensynPaarorendeBegrunn": {
+            "type": "string",
+            "nullable": true
+          },
+          "iverksettelseOverforing": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9282"
+          },
+          "begrunnUmiddOverforing": {
+            "type": "string",
+            "nullable": true
+          },
+          "adgangKlageInnenTreUker": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "vilkaarUtsettelseStraff": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9291"
+          },
+          "godskrivGjennomfoStraff": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9308"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RettsligGrunnlag_OverforingAvDomfeltTilAnnenInstitusjon": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RettsligGrunnlag"
+          }
+        ],
+        "properties": {
+          "sisteDomPaaOverforinTPH": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "eksisterendeHjemmel": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9300"
+          },
+          "eksisterendeDognStatus": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9312"
+          },
+          "dognStatus": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9312"
+          },
+          "endringAvTvangsform": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9299"
+          },
+          "overforesTilEnhet": {
+            "type": "string",
+            "nullable": true
+          },
+          "begrunnelse": {
+            "type": "string",
+            "nullable": true
+          },
+          "medDognTUtenDognBegrunn": {
+            "type": "string",
+            "nullable": true
+          },
+          "hensynPaarorendeBegrunn": {
+            "type": "string",
+            "nullable": true
+          },
+          "iverksettelseOverforing": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9282"
+          },
+          "begrunnUmiddOverforing": {
+            "type": "string",
+            "nullable": true
+          },
+          "adgangKlageInnenTreUker": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "vilkaarUtsettelseStraff": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9291"
+          },
+          "godskrivGjennomfoStraff": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9308"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RettsligGrunnlag_OverforingAv_3_2_TilAnnenInstitusjon": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RettsligGrunnlag"
+          }
+        ],
+        "properties": {
+          "underVedtakSiden": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "vedtaketGjelderTil": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "eksisterendeHjemmel": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9277"
+          },
+          "overforesTilEnhet": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RettsligGrunnlag_OverforingMellomTvangsformer": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RettsligGrunnlag"
+          }
+        ],
+        "properties": {
+          "underTPHSiden": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "vedtakTPHGjelderTil": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "eksisterendeHjemmel": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9277"
+          },
+          "endringAvTvangsform": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9299"
+          },
+          "overforesTilEnhet": {
+            "type": "string",
+            "nullable": true
+          },
+          "begrunnelse": {
+            "type": "string",
+            "nullable": true
+          },
+          "medDognTUtenDognBegrunn": {
+            "type": "string",
+            "nullable": true
+          },
+          "hensynPaarorendeBegrunn": {
+            "type": "string",
+            "nullable": true
+          },
+          "iverksettelseOverforing": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9282"
+          },
+          "begrunnUmiddOverforing": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RettsligGrunnlag_OverforingTilAnnenInstitusjon": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RettsligGrunnlag"
+          }
+        ],
+        "properties": {
+          "underTPHSiden": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "vedtakTPHGjelderTil": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "nesteKontrollundersokelse": {
+            "type": "string",
+            "nullable": true
+          },
+          "fristNesteKontrollundersokelse": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "eksisterendeHjemmel": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9277"
+          },
+          "endringAvTvangsform": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9299"
+          },
+          "overforesTilEnhet": {
+            "type": "string",
+            "nullable": true
+          },
+          "begrunnelse": {
+            "type": "string",
+            "nullable": true
+          },
+          "medDognTUtenDognBegrunn": {
+            "type": "string",
+            "nullable": true
+          },
+          "hensynPaarorendeBegrunn": {
+            "type": "string",
+            "nullable": true
+          },
+          "iverksettelseOverforing": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9282"
+          },
+          "begrunnUmiddOverforing": {
+            "type": "string",
+            "nullable": true
+          },
+          "vilkaarUtsettelseStraff": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9291"
+          },
+          "godskrivGjennomfoStraff": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9308"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RettsligGrunnlag_SamtykkeForlengelseTO": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RettsligGrunnlag"
+          }
+        ],
+        "properties": {
+          "foresporselDato": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "forespurtForlengelseTil": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "ktrlkommisjonensVedtak": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9289"
+          },
+          "datoKtrlkommisjonen": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "forlengesTilTidspunkt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "forlengelseNr": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RettsligGrunnlag_SamtykkeForlengelseTPH": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RettsligGrunnlag"
+          }
+        ],
+        "properties": {
+          "foresporselDato": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "forespurtForlengelseTil": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "ktrlkommisjonensVedtak": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9289"
+          },
+          "datoKtrlkommisjonen": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "forlengesTilTidspunkt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "forlengelseNr": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "nesteKontrollundersokelse": {
+            "type": "string",
+            "nullable": true
+          },
+          "fristNesteKontrollundersokelse": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RettsligGrunnlag_Tilbakeholdelse24Timer": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RettsligGrunnlag"
+          }
+        ],
+        "properties": {
+          "fristForAaFatteVedtak": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "tidspunktForOpphorAvSaken": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RettsligGrunnlag_ToTphIkkeEtableres": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RettsligGrunnlag"
+          }
+        ],
+        "properties": {
+          "pasAnkomTilInstitusjon": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "omNearmPaarorUttalelser": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9311"
+          },
+          "nearmPaarorenUttalelser": {
+            "type": "string",
+            "nullable": true
+          },
+          "detErFremsattBegjearing": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "begjearingMottattDato": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "begjearingFremsattAv": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9290"
+          },
+          "fremBegjearAnlUttaleSeg": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "uttalelseBegjearInstans": {
+            "type": "string",
+            "nullable": true
+          },
+          "pasVeartUndEksternLege": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "eksternLegeUndDato": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "eksternLegeUndUtfortAv": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "ekstLegeUndUtfortAvFriT": {
+            "type": "string",
+            "nullable": true
+          },
+          "eksternLegeUndPgaVedtak": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "internLegeUndDato": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "internLegeUndUtfortAv": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "begrVilkTOTPHIkkeOpfylt": {
+            "type": "string",
+            "nullable": true
+          },
+          "fremBegjErInfoKlageadg": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Tvangsprotokoll": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "vedtakId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "pasientId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "fagligAnsvarlig": {
+            "$ref": "#/components/schemas/Ansvarlig"
+          },
+          "startTidspunkt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "avsluttetTidspunkt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "merknad": {
+            "type": "string",
+            "nullable": true
+          },
+          "lopenummer": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserSettings": {
+        "type": "object",
+        "properties": {
+          "aktiveFiltre": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Vedtak": {
+        "required": [
+          "kontaktId",
+          "pasientId",
+          "rettsligGrunnlagId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "rettsligGrunnlagId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kontaktId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "pasientId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "pasientHarUttaltOgMener": {
+            "type": "string",
+            "nullable": true
+          },
+          "informasjonTilParorende": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9257"
+          },
+          "helsetjenesteenhet": {
+            "type": "string",
+            "nullable": true
+          },
+          "vedtakFattetDato": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "avsluttesInnen": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "vedtakType": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9275"
+          },
+          "begrunnelseForVedtak": {
+            "type": "string",
+            "nullable": true
+          },
+          "fagligAnsvarlig": {
+            "$ref": "#/components/schemas/Ansvarlig"
+          },
+          "fagligAnsvarligFraAnnetForetak": {
+            "$ref": "#/components/schemas/Ansvarlig"
+          },
+          "version": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "patchLogId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Vedtak_4A": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Vedtak"
+          }
+        ],
+        "properties": {
+          "pasInfoKlageFristInsta": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "tiltakSenestAvsluttes": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "kroppUndHvrdanGjennomf": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VolvenKodeverkValue9304"
+            },
+            "nullable": true
+          },
+          "beskrivelseAnnetTiltak": {
+            "type": "string",
+            "nullable": true
+          },
+          "kroppUndBegrunnVedtak": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VolvenKodeverkValue9303"
+            },
+            "nullable": true
+          },
+          "tillatelseLaaseDorPas": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "begrunnNattelaasPasRom": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VolvenKodeverkValue9307"
+            },
+            "nullable": true
+          },
+          "pasTilsynRomNattelaast": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "hvordanUndGjennomfores": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VolvenKodeverkValue9302"
+            },
+            "nullable": true
+          },
+          "undBegrunnelseVedtaket": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VolvenKodeverkValue9301"
+            },
+            "nullable": true
+          },
+          "innskrenVedtakOmfatter": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VolvenKodeverkValue9306"
+            },
+            "nullable": true
+          },
+          "begrunnInnskrenForbind": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VolvenKodeverkValue9305"
+            },
+            "nullable": true
+          },
+          "infoRGHjemmel": {
+            "type": "string",
+            "nullable": true
+          },
+          "infoRGHelsetjensteenhet": {
+            "type": "string",
+            "nullable": true
+          },
+          "infoRGDognStatus": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9312"
+          },
+          "infoRGEtablertDato": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Vedtak_4_3": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Vedtak"
+          }
+        ],
+        "properties": {
+          "opplysningerOmInnhold": {
+            "type": "string",
+            "nullable": true
+          },
+          "utlosendeArsak": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VolvenKodeverkValue9255"
+            },
+            "nullable": true
+          },
+          "begrunnelseSkjerming": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VolvenKodeverkValue9254"
+            },
+            "nullable": true
+          },
+          "iverksattDato": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "lopeNummer": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "infoRGHjemmel": {
+            "type": "string",
+            "nullable": true
+          },
+          "infoRGHelsetjensteenhet": {
+            "type": "string",
+            "nullable": true
+          },
+          "infoRGDognStatus": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9312"
+          },
+          "infoRGEtablertDato": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Vedtak_4_4": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Vedtak"
+          }
+        ],
+        "properties": {
+          "vurdPasSamKompetanse": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9313"
+          },
+          "samKompBegrunnelse": {
+            "type": "string",
+            "nullable": true
+          },
+          "omManglendeSamtykke": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9261"
+          },
+          "ikkeSamKompBegrunnelse": {
+            "type": "string",
+            "nullable": true
+          },
+          "navnAnnetHelsepersSok": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "navnAnnetHelsepersFriT": {
+            "type": "string",
+            "nullable": true
+          },
+          "stillingAnnetHelsepers": {
+            "type": "string",
+            "nullable": true
+          },
+          "oppfatAnnetHelsepers": {
+            "type": "string",
+            "nullable": true
+          },
+          "merknad": {
+            "type": "string",
+            "nullable": true
+          },
+          "lopeNummer": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "pasientenErUnderTph": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "beskrivAnnenBehandForm": {
+            "type": "string",
+            "nullable": true
+          },
+          "begrunnIkkeAlvInngrep": {
+            "type": "string",
+            "nullable": true
+          },
+          "behandFormVedtOmfatter": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9271"
+          },
+          "begrunnTvangbehandling": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VolvenKodeverkValue9260"
+            },
+            "nullable": true
+          },
+          "virkeMidlerBehandling": {
+            "type": "string",
+            "nullable": true
+          },
+          "pasUnderFagAnsv48Timer": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "begrForBrukAvTvang": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9262"
+          },
+          "forventedeBivirkinger": {
+            "type": "string",
+            "nullable": true
+          },
+          "forventetBehandlingsEffekt": {
+            "type": "string",
+            "nullable": true
+          },
+          "typeDosLegemiErnearing": {
+            "type": "string",
+            "nullable": true
+          },
+          "hvorforIkkeTabletter": {
+            "type": "string",
+            "nullable": true
+          },
+          "tvangBehandPaavirkePas": {
+            "type": "string",
+            "nullable": true
+          },
+          "evalTidligereVedtak": {
+            "type": "string",
+            "nullable": true
+          },
+          "evalEffektBivirkning": {
+            "type": "string",
+            "nullable": true
+          },
+          "legeundForetattVedtak": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "legeundGjennomfortAv": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "forutOppstartLegemiddel": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9263"
+          },
+          "forutOppstartErnearing": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9264"
+          },
+          "dognOpphIkkeGodkjntTPH": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "datoPlanOppstartTvangBeh": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "vedtakGyldigTil": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "vedtakOpprinnOpprettet": {
+            "type": "string",
+            "nullable": true
+          },
+          "vedtakFattetOpprinnInst": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "tidAnkomstNaavearInst": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "fagAnsvarligKontaktInfo": {
+            "type": "string",
+            "nullable": true
+          },
+          "infoRGHjemmel": {
+            "type": "string",
+            "nullable": true
+          },
+          "infoRGHelsetjensteenhet": {
+            "type": "string",
+            "nullable": true
+          },
+          "infoRGDognStatus": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9312"
+          },
+          "infoRGEtablertDato": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Vedtak_4_5_Innskrenket": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Vedtak"
+          }
+        ],
+        "properties": {
+          "pasientInfoOmKlage": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "vedtakGjelderFraOgMed": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "innskrenkningenOmfatter": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VolvenKodeverkValue9283"
+            },
+            "nullable": true
+          },
+          "begrunnInnskrForbOmverd": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VolvenKodeverkValue9284"
+            },
+            "nullable": true
+          },
+          "infoRGHjemmel": {
+            "type": "string",
+            "nullable": true
+          },
+          "infoRGHelsetjensteenhet": {
+            "type": "string",
+            "nullable": true
+          },
+          "infoRGDognStatus": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9312"
+          },
+          "infoRGEtablertDato": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Vedtak_4_5_Post": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Vedtak"
+          }
+        ],
+        "properties": {
+          "pasientInfoOmKlage": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "begrunnelsePostkontroll": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VolvenKodeverkValue9285"
+            },
+            "nullable": true
+          },
+          "infoRGHjemmel": {
+            "type": "string",
+            "nullable": true
+          },
+          "infoRGHelsetjensteenhet": {
+            "type": "string",
+            "nullable": true
+          },
+          "infoRGDognStatus": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9312"
+          },
+          "infoRGEtablertDato": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Vedtak_4_6": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Vedtak"
+          }
+        ],
+        "properties": {
+          "pasientInfoOmKlage": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "begrunnelseForPostkontroll": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VolvenKodeverkValue9285"
+            },
+            "nullable": true
+          },
+          "vedtakOmfatter": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VolvenKodeverkValue9286"
+            },
+            "nullable": true
+          },
+          "infoRGHjemmel": {
+            "type": "string",
+            "nullable": true
+          },
+          "infoRGHelsetjensteenhet": {
+            "type": "string",
+            "nullable": true
+          },
+          "infoRGDognStatus": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9312"
+          },
+          "infoRGEtablertDato": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Vedtak_4_7": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Vedtak"
+          }
+        ],
+        "properties": {
+          "pasientInfoOmKlage": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "typeBeslaglagtGjenstand": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VolvenKodeverkValue9287"
+            },
+            "nullable": true
+          },
+          "behandlingAvBeslag": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9288"
+          },
+          "infoRGHjemmel": {
+            "type": "string",
+            "nullable": true
+          },
+          "infoRGHelsetjensteenhet": {
+            "type": "string",
+            "nullable": true
+          },
+          "infoRGDognStatus": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9312"
+          },
+          "infoRGEtablertDato": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Vedtak_4_7a": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Vedtak"
+          }
+        ],
+        "properties": {
+          "pasientInfoOmKlage": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "betegnelseBioMateriale": {
+            "type": "string",
+            "nullable": true
+          },
+          "mistankeRusMidBehForlop": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "nodvenProveBioMateriale": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "infoRGHjemmel": {
+            "type": "string",
+            "nullable": true
+          },
+          "infoRGHelsetjensteenhet": {
+            "type": "string",
+            "nullable": true
+          },
+          "infoRGDognStatus": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9312"
+          },
+          "infoRGEtablertDato": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Vedtak_4_8": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Vedtak"
+          }
+        ],
+        "properties": {
+          "begrunnTvangsmidVedtak": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VolvenKodeverkValue9258"
+            },
+            "nullable": true
+          },
+          "opplysLempMidForgjeves": {
+            "type": "string",
+            "nullable": true
+          },
+          "tidFagAnsInfoHstVedtak": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "tidForIverksetting": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "tiltakSenestAvsluttes": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "hastevedtakAnsvarlig": {
+            "$ref": "#/components/schemas/Ansvarlig"
+          },
+          "merknad": {
+            "type": "string",
+            "nullable": true
+          },
+          "lopeNummer": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "infoRGHjemmel": {
+            "type": "string",
+            "nullable": true
+          },
+          "infoRGHelsetjensteenhet": {
+            "type": "string",
+            "nullable": true
+          },
+          "infoRGDognStatus": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9312"
+          },
+          "infoRGEtablertDato": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Vedtak_4_8_Hastevedtak_fagligAnsvarlig": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Vedtak"
+          }
+        ],
+        "properties": {
+          "hasteVedtakAnsvarlig": {
+            "$ref": "#/components/schemas/Ansvarlig"
+          },
+          "begrunnTvangsmidVedtak": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VolvenKodeverkValue9258"
+            },
+            "nullable": true
+          },
+          "opplysLempMidForgjeves": {
+            "type": "string",
+            "nullable": true
+          },
+          "tidFagAnsInfoHstVedtak": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "tidForIverksetting": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "hastevedtakAnsvarlig": {
+            "$ref": "#/components/schemas/Ansvarlig"
+          },
+          "merknad": {
+            "type": "string",
+            "nullable": true
+          },
+          "lopeNummer": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "fagligAnsStandpunkt": {
+            "type": "string",
+            "nullable": true
+          },
+          "faBesluttOppretthold": {
+            "type": "string",
+            "nullable": true
+          },
+          "tidpktHastVedtakNedtegn": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "infoRGHjemmel": {
+            "type": "string",
+            "nullable": true
+          },
+          "infoRGHelsetjensteenhet": {
+            "type": "string",
+            "nullable": true
+          },
+          "infoRGDognStatus": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9312"
+          },
+          "infoRGEtablertDato": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Vedtak_4_8a": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Vedtak"
+          }
+        ],
+        "properties": {
+          "lopeNummer": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "tidForIverksetting": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "begrunnTvangsmidVedtak": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VolvenKodeverkValue9258"
+            },
+            "nullable": true
+          },
+          "opplysLempMidForgjeves": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Vedtak_4_8b": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Vedtak"
+          }
+        ],
+        "properties": {
+          "lopeNummer": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "tidForIverksetting": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "begrunnTvangsmidVedtak": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VolvenKodeverkValue9258"
+            },
+            "nullable": true
+          },
+          "opplysLempMidForgjeves": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Vedtak_4_8c": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Vedtak"
+          }
+        ],
+        "properties": {
+          "lopeNummer": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "tidForIverksetting": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "tiltakSenestAvsluttes": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "begrunnTvangsmidVedtak": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VolvenKodeverkValue9258"
+            },
+            "nullable": true
+          },
+          "opplysLempMidForgjeves": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Vedtak_4_8d": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Vedtak"
+          }
+        ],
+        "properties": {
+          "lopeNummer": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "tidForIverksetting": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "tiltakSenestAvsluttes": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "begrunnTvangsmidVedtak": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VolvenKodeverkValue9258"
+            },
+            "nullable": true
+          },
+          "opplysLempMidForgjeves": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Vedtak_Avslutt_4_3": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Vedtak"
+          }
+        ],
+        "properties": {
+          "tidspunktForOpphor": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "naarVedtaketBleFattet": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Vedtak_Avslutt_4_4": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Vedtak"
+          }
+        ],
+        "properties": {
+          "tidspunktForOpphor": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Vedtak_Avslutt_4_5_Innskrenket": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Vedtak"
+          }
+        ],
+        "properties": {
+          "tidspunktForOpphor": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Vedtak_Avslutt_4_5_Post": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Vedtak"
+          }
+        ],
+        "properties": {
+          "tidspunktForOpphor": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Vedtak_Avslutt_4a_6": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Vedtak"
+          }
+        ],
+        "properties": {
+          "tidspunktForOpphor": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Vedtak_Avslutt_4a_Nattelaasing": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Vedtak"
+          }
+        ],
+        "properties": {
+          "tidspunktForOpphor": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Vedtak_Avslutt_6": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Vedtak"
+          }
+        ],
+        "properties": {
+          "tidspunktForOpphor": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Vedtak_Avslutt_7": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Vedtak"
+          }
+        ],
+        "properties": {
+          "tidspunktForOpphor": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Vedtak_ECT": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Vedtak"
+          }
+        ],
+        "properties": {
+          "vurdPasSamKompetanse": {
+            "$ref": "#/components/schemas/VolvenKodeverkValue9316"
+          },
+          "pasientensSynPaaTiltak": {
+            "type": "string",
+            "nullable": true
+          },
+          "opplysningFraPaarorende": {
+            "type": "string",
+            "nullable": true
+          },
+          "navnAnnetHelsepersSok": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "navnAnnetHelsepersFriT": {
+            "type": "string",
+            "nullable": true
+          },
+          "stillingAnnetHelsepers": {
+            "type": "string",
+            "nullable": true
+          },
+          "annetHelsepersVurdering": {
+            "type": "string",
+            "nullable": true
+          },
+          "merknad": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Vedtak_Holding": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Vedtak"
+          }
+        ],
+        "properties": {
+          "merknad": {
+            "type": "string",
+            "nullable": true
+          },
+          "nodvendigBenyttNodrett": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "hendelseStartet": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "hendelseAvsluttet": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Vedtak_Rus": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Vedtak"
+          }
+        ],
+        "properties": {
+          "merknad": {
+            "type": "string",
+            "nullable": true
+          },
+          "vedtakGyldigTil": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "typeGjennomforing": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue": {
+        "type": "object",
+        "properties": {
+          "kodeverkId": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "dipsKodeListeId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "dipsKodeverkVerdiId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue8441": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9254": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9255": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9257": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9258": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9260": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9261": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9262": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9263": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9264": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9265": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9266": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9267": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9269": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9271": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9272": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9275": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9276": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9277": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9279": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9280": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9282": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9283": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9284": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9285": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9286": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9287": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9288": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9289": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9290": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9291": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9292": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9298": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9299": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9300": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9301": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9302": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9303": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9304": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9305": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9306": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9307": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9308": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9311": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9312": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9313": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9315": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9316": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "VolvenKodeverkValue9317": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VolvenKodeverkValue"
+          }
+        ],
+        "additionalProperties": false
+      }
+    },
+    "securitySchemes": {
+      "TicketHeader": {
+        "type": "apiKey",
+        "description": "Enter a valid ticket in the text input below. \r\n\r\nExample: \"02591eea-57de-4d5a-9d66-c7f968c81afa\"",
+        "name": "TicketHeader",
+        "in": "header"
+      }
+    }
+  },
+  "security": [
+    {
+      "TicketHeader": [ ]
+    }
+  ]
+}
